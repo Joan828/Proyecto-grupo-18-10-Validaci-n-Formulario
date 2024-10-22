@@ -13,7 +13,8 @@ for (let i = 0; i < usuariosArray.length; i++) {
     </div>
     </div>`
 
-    nuevoDiv.innerHTML = contenido
-    contenedor.appendChild(nuevoDiv)
-   
+nuevoDiv.innerHTML = contenido
+contenedor.appendChild(nuevoDiv)
+    
 }
+

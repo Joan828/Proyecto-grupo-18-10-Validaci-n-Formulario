@@ -7,76 +7,56 @@ let usuarioCreado = false
 let usuarios = []
 
 
-function validarDatos(e){
-  e.preventDefault()
-
+function validarDatos(){
   if(name.value.length == 0){
-    document.querySelector("#nameAlert").className = "alert alert-danger"
-    document.querySelector("#nameAlert").innerText = "El nombre es obligatorio"
+    pintarYBorrarAlerta("nameAlert", "El nombre es obligatorio")
     nombreCorrecto = false
   }else{
-      document.querySelector("#nameAlert").className = ""
-      document.querySelector("#nameAlert").innerText = ""
       nombreCorrecto = true
   }
   if(email.value.length == 0){
-    document.querySelector("#emailAlert").className = "alert alert-danger"
-    document.querySelector("#emailAlert").innerText = "El correo es obligatorio"
+    pintarYBorrarAlerta("emailAlert", "El correo es obligatorio")
     correoCorrecto = false
 
   }else if (/(\w+?@\w+?\x2E.+)/.test(email.value) !== true){
-    document.querySelector("#emailAlert").className = "alert alert-danger"
-    document.querySelector("#emailAlert").innerText = "Debe introducir una dirección de correo válida"
+    pintarYBorrarAlerta("emailAlert", "Debe introducir una dirección de correo válida")
     correoCorrecto = false
     }else{
-      document.querySelector("#emailAlert").className = ""
-      document.querySelector("#emailAlert").innerText = ""
       correoCorrecto = true
     }
 
   if(pass1.value.length == 0){
-    document.querySelector("#pass1Alert").className = "alert alert-danger"
-    document.querySelector("#pass1Alert").innerText = "La contraseña es obligatoria"
+    pintarYBorrarAlerta("pass1Alert", "La contraseña es obligatoria")
     pass1Correcta = false
   }else if(pass1.value.length < 8){
-    document.querySelector("#pass1Alert").className = "alert alert-danger"
-    document.querySelector("#pass1Alert").innerText = "La contraseña debe tener al menos 8 caracteres"
+    pintarYBorrarAlerta("pass1Alert", "La contraseña debe tener al menos 8 caracteres")
     pass1Correcta = false
   }else{
-    document.querySelector("#pass1Alert").className = ""
-    document.querySelector("#pass1Alert").innerText = ""
     pass1Correcta = true
   }
 
   if(pass2.value.length == 0){
-    document.querySelector("#pass2Alert").className = "alert alert-danger"
-    document.querySelector("#pass2Alert").innerText = "Debe repetir la contraseña"
+    pintarYBorrarAlerta("pass2Alert", "Debe repetir la contraseña")
     pass2Correcta = false
   }else{
-    document.querySelector("#pass2Alert").className = ""
-    document.querySelector("#pass2Alert").innerText = ""
     pass2Correcta = true
   }
 
   if(pass1.value !== pass2.value){
-    document.querySelector("#pass12Alert").className = "alert alert-danger"
-    document.querySelector("#pass12Alert").innerText = "Las contraseñas deben coincidir"
+    pintarYBorrarAlerta("pass12Alert", "Las contraseñas deben coincidir")
     passCoinciden = false
   }else{
-    document.querySelector("#pass12Alert").className = ""
-    document.querySelector("#pass12Alert").innerText = ""
     passCoinciden = true
   }
 
   if(nombreCorrecto && correoCorrecto && pass1Correcta && pass2Correcta && passCoinciden){
-    document.querySelector("#pass12Alert").className = "alert alert-success"
-    document.querySelector("#pass12Alert").innerText = "Usuario creado con éxito"
     usuarioCreado = true
   }
 }
 
 function guardarDatos(e){
     e.preventDefault()
+    validarDatos()
     let datosUsuario = {
         Nombre: name.value,
         Correo: email.value,
@@ -93,14 +73,12 @@ function guardarDatos(e){
         usuarios.push(datosUsuario)
         //Pasamos a cadena nuestro array y lo metemos
         localStorage.setItem('user', JSON.stringify(usuarios))
-        console.log(usuarios);
         
         window.location.href = "./show.html";
       }else{// Sino entra aquí
         //Se trae lo que haya en el navegador pasandolo de texto a objeto
         const usuariosAntiguos = JSON.parse(localStorage.getItem("user"))
         //Carga el array usuarios con los usuarios antiguos con un for
-        console.log(usuariosAntiguos[0]);
         for (let i = 0; i < usuariosAntiguos.length; i++) {
           usuarios.push(usuariosAntiguos[i])
           
@@ -109,9 +87,12 @@ function guardarDatos(e){
         usuarios.push(datosUsuario)
         //Pasamos a cadena nuestro array y lo metemos
         localStorage.setItem('user', JSON.stringify(usuarios))
-        console.log(usuarios);
-
-        window.location.href = "./show.html";
+        document.querySelector("#pass12Alert").className = "alert alert-success"
+        document.querySelector("#pass12Alert").innerText = "Usuario creado con éxito"  
+        setTimeout(() => {
+          window.location.href = "./show.html";
+        }, 3000);
+        
         
       }
 
@@ -119,6 +100,15 @@ function guardarDatos(e){
 
   }
 
+function pintarYBorrarAlerta(divId, mensaje){
+  const div = document.getElementById(divId)
+  div.className = "alert alert-danger"
+  div.innerHTML = mensaje
+  setTimeout(() => {
+    div.className = ""
+    div.innerHTML = ""
+  }, 3000);
+}
+
 const btn = document.getElementById("btn")
-btn.addEventListener("click",validarDatos)
-btn.addEventListener("click",guardarDatos)
+btn.addEventListener("click", guardarDatos)
