@@ -122,4 +122,3 @@ function guardarDatos(e){
 const btn = document.getElementById("btn")
 btn.addEventListener("click",validarDatos)
 btn.addEventListener("click",guardarDatos)
-
